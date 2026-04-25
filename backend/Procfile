@@ -1,1 +1,2 @@
-web: java -jar target/*.jar
+# Dockerfile-based deployment
+# Render will use the Dockerfile automatically
