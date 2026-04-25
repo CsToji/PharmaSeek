@@ -134,15 +134,6 @@ CREATE TABLE notification (
     CONSTRAINT fk_notification_user FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE
 );
 
-CREATE TABLE password_reset_token (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    token VARCHAR(255) NOT NULL UNIQUE,
-    expiry_date TIMESTAMP NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_password_reset_user FOREIGN KEY (user_id) REFERENCES user_account(id) ON DELETE CASCADE
-);
-
 INSERT INTO role (code, description) VALUES
     ('CLIENT', 'End user / patient'),
     ('PHARMACY', 'Pharmacy account'),
