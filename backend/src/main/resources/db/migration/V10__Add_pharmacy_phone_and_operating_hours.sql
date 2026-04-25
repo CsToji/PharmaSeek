@@ -1,0 +1,2 @@
+ALTER TABLE pharmacy ADD COLUMN phone VARCHAR(20);
+ALTER TABLE pharmacy ADD COLUMN operating_hours VARCHAR(100);

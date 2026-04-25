@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS drug_catalog;
+DROP TABLE IF EXISTS catalog;
+

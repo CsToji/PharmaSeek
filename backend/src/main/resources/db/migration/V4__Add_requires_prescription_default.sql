@@ -1,0 +1,3 @@
+ALTER TABLE drug
+    ADD COLUMN requires_prescription BOOLEAN NOT NULL DEFAULT FALSE;
+

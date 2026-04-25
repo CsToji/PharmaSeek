@@ -1,0 +1,305 @@
+/* ═══════════════════════════════════════════
+   POPUP  ·  Notification System
+   PharmaSeek – matching Inter / Outfit theme
+═══════════════════════════════════════════ */
+
+/* ── Container (fixed, top-right) ── */
+.popup-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  /* let clicks pass through the gap */
+  width: 360px;
+  max-width: calc(100vw - 48px);
+}
+
+/* ── Base PopUp card ── */
+.popup {
+  pointer-events: all;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px 22px;
+  /* extra bottom room for progress bar */
+  border-radius: 14px;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.18),
+    0 2px 8px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border: 1px solid transparent;
+  cursor: default;
+  font-family: 'Outfit', sans-serif;
+  will-change: transform, opacity;
+}
+
+/* ── Icon wrapper ── */
+.popup__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+
+/* ── Text body ── */
+.popup__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.popup__label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  opacity: 0.85;
+}
+
+.popup__message {
+  font-size: 0.92rem;
+  font-weight: 400;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ── Close button ── */
+.popup__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.popup__close:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Progress bar ── */
+.popup__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 0 0 14px 14px;
+  transform-origin: left;
+  animation: popup-drain linear forwards;
+}
+
+@keyframes popup-drain {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+/* ══════════════════════════════════════════
+   TYPE VARIANTS
+══════════════════════════════════════════ */
+
+/* ── ✅  VALID / SUCCESS ── */
+.popup--valid {
+  background: linear-gradient(135deg,
+      rgba(16, 185, 129, 0.18) 0%,
+      rgba(16, 185, 129, 0.10) 100%);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #ecfdf5;
+}
+
+.popup--valid .popup__icon {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+}
+
+.popup--valid .popup__label {
+  color: #6ee7b7;
+}
+
+.popup--valid .popup__close {
+  color: #6ee7b7;
+}
+
+.popup--valid .popup__progress {
+  background: linear-gradient(90deg, #10b981, #34d399);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.6);
+}
+
+/* ── ⚠️  WARNING ── */
+.popup--warning {
+  background: linear-gradient(135deg,
+      rgba(251, 191, 36, 0.18) 0%,
+      rgba(251, 191, 36, 0.10) 100%);
+  border-color: rgba(251, 191, 36, 0.35);
+  color: #fffbeb;
+}
+
+.popup--warning .popup__icon {
+  background: rgba(251, 191, 36, 0.22);
+  color: #fbbf24;
+}
+
+.popup--warning .popup__label {
+  color: #fcd34d;
+}
+
+.popup--warning .popup__close {
+  color: #fcd34d;
+}
+
+.popup--warning .popup__progress {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+/* ── ❌  ERROR ── */
+.popup--error {
+  background: linear-gradient(135deg,
+      rgba(239, 68, 68, 0.18) 0%,
+      rgba(239, 68, 68, 0.10) 100%);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fef2f2;
+}
+
+.popup--error .popup__icon {
+  background: rgba(239, 68, 68, 0.22);
+  color: #f87171;
+}
+
+.popup--error .popup__label {
+  color: #fca5a5;
+}
+
+.popup--error .popup__close {
+  color: #fca5a5;
+}
+
+.popup--error .popup__progress {
+  background: linear-gradient(90deg, #dc2626, #f87171);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+/* ── ℹ️  INFO ── */
+.popup--info {
+  background: linear-gradient(135deg,
+      rgba(59, 130, 246, 0.18) 0%,
+      rgba(59, 130, 246, 0.10) 100%);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #fef2f2;
+}
+
+.popup--info .popup__icon {
+  background: rgba(59, 130, 246, 0.22);
+  color: #60a5fa;
+}
+
+.popup--info .popup__label {
+  color: #93c5fd;
+}
+
+.popup--info .popup__close {
+  color: #93c5fd;
+}
+
+.popup--info .popup__progress {
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+}
+
+/* ══════════════════════════════════════════
+   LIGHT-THEME OVERRIDES
+══════════════════════════════════════════ */
+[data-theme='light'] .popup--valid {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06));
+  color: #064e3b;
+}
+
+[data-theme='light'] .popup--valid .popup__label {
+  color: #059669;
+}
+
+[data-theme='light'] .popup--valid .popup__close {
+  color: #059669;
+}
+
+[data-theme='light'] .popup--warning {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.14), rgba(251, 191, 36, 0.07));
+  color: #78350f;
+}
+
+[data-theme='light'] .popup--warning .popup__label {
+  color: #d97706;
+}
+
+[data-theme='light'] .popup--warning .popup__close {
+  color: #d97706;
+}
+
+[data-theme='light'] .popup--error {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(239, 68, 68, 0.06));
+  color: #7f1d1d;
+}
+
+[data-theme='light'] .popup--error .popup__label {
+  color: #dc2626;
+}
+
+[data-theme='light'] .popup--error .popup__close {
+  color: #dc2626;
+}
+
+[data-theme='light'] .popup--info {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.06));
+  color: #1e3a8a;
+}
+
+[data-theme='light'] .popup--info .popup__label {
+  color: #2563eb;
+}
+
+[data-theme='light'] .popup--info .popup__close {
+  color: #2563eb;
+}
+
+/* ── Box shadow adjustments for light mode ── */
+[data-theme='light'] .popup {
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.10),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .popup-container {
+    top: 16px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
+}

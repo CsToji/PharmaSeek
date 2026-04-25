@@ -1,0 +1,16 @@
+[
+    {
+        "id": "RES-CK-001",
+        "pharmacy": "City Pharma",
+        "medicine": "Amoxicillin 500mg",
+        "date": "2024-02-16",
+        "status": "Ready"
+    },
+    {
+        "id": "RES-CK-002",
+        "pharmacy": "Green Cross",
+        "medicine": "Ibuprofen 400mg",
+        "date": "2024-02-18",
+        "status": "Pending"
+    }
+]

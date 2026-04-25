@@ -1,0 +1,11 @@
+ etat  grippal    symptoms 
+ rhume  cold 
+ rhinite  rhinitis 
+ rhinopharyngite  rhinopharyngitis 
+ poudre  pour  solution  orale 
+ powder    oral  solution 
+  12  sachets 
+ paidiuistaeisi  abults 
+ 35 
+ a4 
+ 939  

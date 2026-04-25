@@ -1,0 +1,574 @@
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+    LayoutDashboard,
+    Package,
+    CalendarCheck,
+    Settings,
+    LogOut,
+    Plus,
+    Search,
+    Filter,
+    Edit2,
+    Trash2,
+    CheckCircle2,
+    Clock,
+    TrendingUp,
+    AlertTriangle,
+    ArrowLeft,
+    Sun,
+    Moon
+} from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import drugService from '../services/drugService';
+import reservationService from '../services/reservationService';
+import pharmacyStockService from '../services/pharmacyStockService';
+import usePopUp from '../components/usePopUp';
+import './PharmacyDashboard.css';
+
+const PharmacyDashboard = () => {
+    const [activeTab, setActiveTab] = useState('overview');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentProductId, setCurrentProductId] = useState(null);
+    const [newProduct, setNewProduct] = useState({
+        name: '',
+        category: '',
+        stock: '',
+        price: '',
+        status: 'In Stock'
+    });
+
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+    const [inventoryData, setInventoryData] = useState([]);
+    const [reservationsData, setReservationsData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const { user, logout } = useAuth();
+    const { popup } = usePopUp();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = async () => {
+        setIsLoading(true);
+        try {
+            const [inventory, reservations] = await Promise.all([
+                pharmacyStockService.getMyInventory(),
+                reservationService.getMyReservations()
+            ]);
+            setInventoryData(inventory || []);
+            setReservationsData(reservations || []);
+        } catch (error) {
+            console.error('Failed to load data:', error);
+            popup.error('Failed to load data. Please try again.');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }, [theme]);
+
+    const toggleTheme = () => {
+        setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            navigate('/');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
+
+    const handleUpdateReservationStatus = async (reservationId, status) => {
+        try {
+            await reservationService.updateReservationStatus(reservationId, status);
+            setReservationsData(reservationsData.map(r => 
+                r.id === reservationId ? { ...r, status } : r
+            ));
+            popup.valid('Reservation status updated!');
+        } catch (error) {
+            popup.error('Failed to update status: ' + error.message);
+        }
+    };
+
+    const handleDeleteStock = async (stockId) => {
+        try {
+            await pharmacyStockService.deleteStock(stockId);
+            setInventoryData(inventoryData.filter(item => item.id !== stockId));
+            popup.valid('Stock deleted!');
+        } catch (error) {
+            popup.error('Failed to delete stock: ' + error.message);
+        }
+    };
+
+    const handleSaveProduct = async (e) => {
+        e.preventDefault();
+        try {
+            if (isEditing) {
+                await pharmacyStockService.updateStock(currentProductId, {
+                    quantity: parseInt(newProduct.stock),
+                    price: newProduct.price
+                });
+            } else {
+                await pharmacyStockService.addStock({
+                    drugName: newProduct.name,
+                    quantity: parseInt(newProduct.stock),
+                    price: newProduct.price
+                });
+            }
+            await loadData();
+            setIsModalOpen(false);
+            setIsEditing(false);
+            setNewProduct({ name: '', category: '', stock: '', price: '', status: 'In Stock' });
+            popup.valid('Product saved successfully!');
+        } catch (error) {
+            popup.error('Failed to save product: ' + error.message);
+        }
+    };
+
+    const renderOverview = () => {
+        const totalProducts = inventoryData?.length || 0;
+        const lowStockItems = inventoryData?.filter(item => item.quantity < 10).length || 0;
+        const todayReservations = reservationsData?.filter(r => {
+            const today = new Date().toISOString().split('T')[0];
+            return r.reservedAt?.startsWith(today);
+        }).length || 0;
+        const pendingReservations = reservationsData?.filter(r => r.status === 'PENDING').length || 0;
+        
+        return (
+        <>
+            <div className="stats-grid">
+                <div className="stat-card">
+                    <div className="stat-icon" style={{ background: 'rgba(56, 189, 248, 0.1)', color: 'var(--pharmacy-accent)' }}>
+                        <Package size={24} />
+                    </div>
+                    <div className="stat-info">
+                        <div className="stat-value">{totalProducts}</div>
+                        <div className="stat-label">Total Products</div>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon" style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171' }}>
+                        <AlertTriangle size={24} />
+                    </div>
+                    <div className="stat-info">
+                        <div className="stat-value">{lowStockItems}</div>
+                        <div className="stat-label">Low Stock items</div>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon" style={{ background: 'rgba(16, 185, 129, 0.2)', color: '#34d399' }}>
+                        <CalendarCheck size={24} />
+                    </div>
+                    <div className="stat-info">
+                        <div className="stat-value">{todayReservations}</div>
+                        <div className="stat-label">Today's Reservations</div>
+                    </div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-icon" style={{ background: 'rgba(139, 92, 246, 0.2)', color: '#a78bfa' }}>
+                        <TrendingUp size={24} />
+                    </div>
+                    <div className="stat-info">
+                        <div className="stat-value">{pendingReservations}</div>
+                        <div className="stat-label">Pending Orders</div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="section-container">
+                <div className="section-header">
+                    <h2>Recent Reservations</h2>
+                    <button className="btn btn-primary" onClick={() => setActiveTab('reservations')}>View All</button>
+                </div>
+                <div className="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Patient</th>
+                                <th>Medicine</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reservationsData && reservationsData.length > 0 ? (
+                                reservationsData.slice(0, 3).map(res => (
+                                    <tr key={res.id}>
+                                        <td><strong>{res.id}</strong></td>
+                                        <td>{res.clientId}</td>
+                                        <td>{res.items?.map(i => i.drugName || i.drugId).join(', ') || 'N/A'}</td>
+                                        <td>
+                                            <span className={`badge ${res.status === 'READY' ? 'badge-success' :
+                                                res.status === 'PENDING' ? 'badge-warning' : 'badge-info'
+                                                }`}>
+                                                {res.status || 'PENDING'}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button className="btn-icon" onClick={() => handleUpdateReservationStatus(res.id, 'READY')}><CheckCircle2 size={18} /></button>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                        No reservations yet.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </>
+        );
+
+        const handleEditClick = (product) => {
+        setIsEditing(true);
+        setCurrentProductId(product.id);
+        setNewProduct({
+            name: product.name,
+            category: product.category,
+            stock: product.stock,
+            price: product.price,
+            status: product.status
+        });
+        setIsModalOpen(true);
+    };
+
+    const openAddModal = () => {
+        setIsEditing(false);
+        setNewProduct({ name: '', category: '', stock: '', price: '', status: 'In Stock' });
+        setIsModalOpen(true);
+    };
+
+    const renderInventory = () => (
+        <div className="section-container">
+            <div className="section-header">
+                <h2>Product Inventory</h2>
+                <div className="action-btns">
+                    <button className="btn btn-secondary"><Filter size={18} /> Filter</button>
+                    <button className="btn btn-primary" onClick={openAddModal}><Plus size={18} /> Add New Product</button>
+                </div>
+            </div>
+            <div className="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Category</th>
+                            <th>Stock</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {inventoryData && inventoryData.length > 0 ? (
+                            inventoryData.map(item => (
+                                <tr key={item.id}>
+                                    <td><strong>{item.drugName || item.name}</strong></td>
+                                    <td>{item.category || 'General'}</td>
+                                    <td>{item.quantity || item.stock || 0}</td>
+                                    <td>{item.price || '$0.00'}</td>
+                                    <td>
+                                        <span className={`badge ${item.quantity > 10 ? 'badge-success' :
+                                            item.quantity > 0 ? 'badge-warning' : 'badge-danger'
+                                            }`}>
+                                            {item.quantity > 10 ? 'In Stock' : item.quantity > 0 ? 'Low Stock' : 'Out of Stock'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="action-btns">
+                                            <button className="btn-icon" onClick={() => handleEditClick(item)}><Edit2 size={16} /></button>
+                                            <button className="btn-icon" onClick={() => handleDeleteStock(item.id)}><Trash2 size={16} /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                    No inventory items. Add your first product!
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+
+    const renderReservations = () => (
+        <div className="section-container">
+            <div className="section-header">
+                <h2>Manage Reservations</h2>
+                <div className="search-bar" style={{ position: 'relative', width: '300px' }}>
+                    <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--dash-text-muted)' }} />
+                    <input type="text" placeholder="Search Patient or Order ID..." style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.5rem', borderRadius: '10px', border: '1px solid var(--dash-border)', background: 'var(--dash-card)', color: 'var(--dash-text)' }} />
+                </div>
+            </div>
+            <div className="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Patient Name</th>
+                            <th>Medicine</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {reservationsData && reservationsData.length > 0 ? (
+                            reservationsData.map(res => (
+                                <tr key={res.id}>
+                                    <td><strong>{res.id}</strong></td>
+                                    <td>{res.clientId}</td>
+                                    <td>{res.items?.map(i => i.drugName || i.drugId).join(', ') || 'N/A'}</td>
+                                    <td>{res.reservedAt ? new Date(res.reservedAt).toLocaleDateString() : 'N/A'}</td>
+                                    <td>
+                                        <span className={`badge ${res.status === 'READY' ? 'badge-success' :
+                                            res.status === 'PENDING' ? 'badge-warning' : 'badge-info'
+                                            }`}>
+                                            {res.status || 'PENDING'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div className="action-btns">
+                                            <button className="btn-icon" title="Mark as Ready" onClick={() => handleUpdateReservationStatus(res.id, 'READY')}><CheckCircle2 size={16} /></button>
+                                            <button className="btn-icon" title="View Details"><Clock size={16} /></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+                                    No reservations yet.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+
+    const renderSettings = () => (
+        <div className="section-container">
+            <div className="section-header">
+                <h2>Pharmacy Settings</h2>
+            </div>
+            <form style={{ maxWidth: '600px' }}>
+                <div className="form-group">
+                    <label>Pharmacy Name</label>
+                    <input type="text" defaultValue="PharmaCentral" />
+                </div>
+                <div className="form-group">
+                    <label>Contact Email</label>
+                    <input type="email" defaultValue="contact@pharmacentral.com" />
+                </div>
+                <div className="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" defaultValue="+33 1 23 45 67 89" />
+                </div>
+                <div className="section-header" style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+                    <h3 style={{ fontSize: '1.2rem', color: 'var(--dash-text)' }}>Location Configuration</h3>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
+                    <div className="form-group">
+                        <label>Longitude</label>
+                        <input type="text" defaultValue="2.3522" placeholder="e.g. 2.3522" />
+                    </div>
+                    <div className="form-group">
+                        <label>Latitude</label>
+                        <input type="text" defaultValue="48.8566" placeholder="e.g. 48.8566" />
+                    </div>
+                    <div className="form-group">
+                        <label>Altitude (m)</label>
+                        <input type="text" defaultValue="35" placeholder="e.g. 35" />
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label>Operating Hours</label>
+                    <input type="text" defaultValue="08:00 - 20:00 (Mon-Sat)" />
+                </div>
+                <div className="form-actions" style={{ marginTop: '1.5rem', justifyContent: 'flex-start' }}>
+                    <button className="btn btn-primary" type="button" onClick={() => alert('Settings successfully updated!')}>Save Settings</button>
+                </div>
+            </form>
+        </div>
+    );
+
+    return (
+        <div className="dashboard-container">
+            {/* Sidebar */}
+            <aside className="dashboard-sidebar">
+                <div className="sidebar-brand">
+                    {/*<div style={{ padding: '8px', background: 'var(--pharmacy-accent)', borderRadius: '10px', color: 'var(--pharmacy-blue)' }}>
+                        <Package size={24} />
+                    </div>*/}
+                    <div className="logo-icon">
+                        {/*<Activity size={24} />*/}
+                        <img src="/Logo251x251.png" alt="logo" width={50} height={50} />
+                    </div>
+                    <span>PharmaSeek</span>
+                </div>
+
+                <nav className="sidebar-nav">
+                    <button
+                        className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('overview')}
+                    >
+                        <LayoutDashboard size={20} />
+                        <span>Dashboard</span>
+                    </button>
+                    <button
+                        className={`nav-item ${activeTab === 'inventory' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('inventory')}
+                    >
+                        <Package size={20} />
+                        <span>Inventory</span>
+                    </button>
+                    <button
+                        className={`nav-item ${activeTab === 'reservations' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('reservations')}
+                    >
+                        <CalendarCheck size={20} />
+                        <span>Reservations</span>
+                    </button>
+                    <button
+                        className={`nav-item ${activeTab === 'settings' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('settings')}
+                    >
+                        <Settings size={20} />
+                        <span>Settings</span>
+                    </button>
+                </nav>
+
+                <div className="sidebar-footer">
+                    <button className="nav-item" onClick={handleLogout} style={{ width: '100%', border: 'none', background: 'transparent', cursor: 'pointer' }}>
+                        <LogOut size={20} />
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="dashboard-main">
+                <header className="dashboard-header">
+                    <div className="header-title">
+                        <h1>
+                            {activeTab === 'overview' ? `Welcome back, ${user?.name || 'Pharmacy'}!` :
+                                activeTab === 'inventory' ? 'Inventory Management' : 
+                                activeTab === 'reservations' ? 'Reservations Overview' : 'Pharmacy Settings'}
+                        </h1>
+                        <p>
+                            {activeTab === 'overview' ? 'Here is what is happening today.' :
+                                activeTab === 'inventory' ? 'Manage and track your medical stock.' : 
+                                activeTab === 'reservations' ? 'Review and process patient reservations.' : 'Configure your pharmacy details and location parameters.'}
+                        </p>
+                    </div>
+                    <div className="header-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <button className="btn-icon" onClick={toggleTheme} title="Toggle Theme">
+                            {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                        </button>
+                        <button className="btn btn-secondary">Today's Brief</button>
+                        <Link to="/" className="btn btn-outline">
+                            <ArrowLeft size={16} style={{ marginRight: '8px' }} /> Landing Page
+                        </Link>
+                    </div>
+                </header>
+
+                <div className="dashboard-content">
+                    {activeTab === 'overview' && renderOverview()}
+                    {activeTab === 'inventory' && renderInventory()}
+                    {activeTab === 'reservations' && renderReservations()}
+                    {activeTab === 'settings' && renderSettings()}
+                </div>
+
+                {isModalOpen && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <h2>{isEditing ? 'Edit Product' : 'Add New Product'}</h2>
+                            <form onSubmit={handleSaveProduct}>
+                                <div className="form-group">
+                                    <label>Medicine Name</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={newProduct.name}
+                                        onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                                        placeholder="e.g. Lisinopril 10mg"
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label>Category</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        value={newProduct.category}
+                                        onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                                        placeholder="e.g. Hypertension"
+                                    />
+                                </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                    <div className="form-group">
+                                        <label>Stock Level</label>
+                                        <input
+                                            type="number"
+                                            required
+                                            value={newProduct.stock}
+                                            onChange={(e) => setNewProduct({ ...newProduct, stock: e.target.value })}
+                                            placeholder="Quantity"
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Price</label>
+                                        <input
+                                            type="text"
+                                            required
+                                            value={newProduct.price}
+                                            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                            placeholder="€0.00"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label>Initial Status</label>
+                                    <select
+                                        value={newProduct.status}
+                                        onChange={(e) => setNewProduct({ ...newProduct, status: e.target.value })}
+                                    >
+                                        <option value="In Stock">In Stock</option>
+                                        <option value="Low Stock">Low Stock</option>
+                                        <option value="Out of Stock">Out of Stock</option>
+                                    </select>
+                                </div>
+                                <div className="form-actions">
+                                    <button type="button" className="btn btn-outline" onClick={() => setIsModalOpen(false)}>Cancel</button>
+                                    <button type="submit" className="btn btn-primary">
+                                        {isEditing ? 'Update Product' : 'Save Product'}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
+            </main>
+        </div>
+    );
+};
+
+export default PharmacyDashboard;

@@ -1,0 +1,375 @@
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+    background: var(--dash-pharma-bg) !important;
+    color: var(--dash-text) !important;
+}
+
+/* Sidebar */
+.dashboard-sidebar {
+    width: 260px;
+    background-color: var(--dash-pharma-sidebar);
+    color: var(--dash-text);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 10;
+    transition: width var(--transition-speed);
+    border-right: 1px solid var(--dash-border);
+}
+
+.sidebar-brand {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--pharmacy-accent);
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    color: var(--dash-text-muted);
+    text-decoration: none;
+    transition: all var(--transition-speed);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.nav-item:hover {
+    background-color: var(--dash-card);
+    color: var(--pharmacy-accent);
+}
+
+.nav-item.active {
+    background-color: var(--pharmacy-accent);
+    color: var(--pharmacy-blue);
+    font-weight: 600;
+}
+
+.sidebar-footer {
+    padding-top: 2rem;
+    border-top: 1px solid var(--dash-border);
+}
+
+/* Main Content */
+.dashboard-main {
+    flex: 1;
+    margin-left: 260px;
+    padding: 2rem 3rem;
+    background: transparent;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.header-title h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--dash-text);
+}
+
+.header-title p {
+    color: var(--dash-text-muted);
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.stat-card {
+    background: var(--dash-card);
+    border: 1px solid var(--dash-border);
+    padding: 1.5rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.stat-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-info .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dash-text);
+}
+
+.stat-info .stat-label {
+    font-size: 0.875rem;
+    color: var(--dash-text-muted);
+}
+
+/* Sections */
+.section-container {
+    background: var(--dash-card);
+    border: 1px solid var(--dash-border);
+    border-radius: 24px;
+    padding: 2rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.section-header h2 {
+    color: var(--dash-text);
+}
+
+/* Tables */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    padding: 1rem;
+    border-bottom: 1px solid var(--dash-border);
+    color: var(--dash-text-muted);
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+td {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--dash-border);
+    vertical-align: middle;
+    color: var(--dash-text);
+}
+
+.badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success, #10b981);
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning, #f59e0b);
+}
+
+.badge-danger {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--danger, #ef4444);
+}
+
+.badge-info {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--accent-primary);
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    will-change: transform, box-shadow;
+}
+
+.btn-primary {
+    background: var(--pharmacy-accent);
+    color: var(--pharmacy-blue);
+    box-shadow: 0 6px 15px rgba(56, 189, 248, 0.2);
+}
+
+.btn-primary:hover {
+    background: white;
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(56, 189, 248, 0.3);
+}
+
+.btn-secondary {
+    background: var(--dash-card);
+    color: var(--dash-text);
+    border: 1px solid var(--dash-border);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+    background: var(--dash-card-hover);
+    transform: translateY(-4px);
+    border-color: var(--pharmacy-accent);
+    color: var(--pharmacy-accent);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--dash-text-muted);
+    border: 1px solid var(--dash-border);
+}
+
+.btn-outline:hover {
+    background: var(--dash-card);
+    color: var(--dash-text);
+    border-color: var(--dash-border);
+    transform: translateY(-2px);
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--dash-border);
+    background: transparent;
+    color: var(--dash-text);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    background: var(--dash-card);
+    border-color: var(--pharmacy-accent);
+    color: var(--pharmacy-accent);
+    transform: scale(1.1);
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-content {
+    background: var(--dash-pharma-sidebar);
+    width: 90%;
+    max-width: 500px;
+    padding: 2.5rem;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--dash-border);
+    color: var(--dash-text);
+}
+
+.modal-content h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--dash-text-muted);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--dash-border);
+    background: var(--dash-card);
+    color: var(--dash-text);
+    font-family: inherit;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.form-group input:focus {
+    border-color: var(--pharmacy-accent);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard-sidebar {
+        width: 80px;
+        padding: 2rem 1rem;
+    }
+
+    .sidebar-brand span,
+    .nav-item span {
+        display: none;
+    }
+
+    .dashboard-main {
+        margin-left: 80px;
+    }
+}

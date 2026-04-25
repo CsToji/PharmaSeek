@@ -1,0 +1,226 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Light Mode Palette (Default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --accent-primary: #38bdf8;
+  --accent-secondary: #10b981;
+  --nav-bg: rgba(255, 255, 255, 0.8);
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --btn-text: #ffffff;
+
+  /* Status colors */
+  --danger: #dc2626;
+  --success: #16a34a;
+  --purple: #7c3aed;
+  --warning: #ca8a04;
+
+  /* Dashboard Light Theme */
+  --dash-pharma-bg: #f1f5f9;
+  --dash-pharma-sidebar: #ffffff;
+  --dash-client-bg: #f1f5f9;
+  --dash-client-sidebar: #ffffff;
+  
+  --dash-text: #0f172a;
+  --dash-text-muted: #64748b;
+  --dash-border: rgba(0, 0, 0, 0.1);
+  --dash-card: #ffffff;
+  --dash-card-hover: #f8fafc;
+
+  /* Original Palette Variables for Hero (Preserved for the split design) */
+  --pharmacy-blue: #0A192F;
+  --pharmacy-accent: #38bdf8;
+  --client-mint: #064e3b;
+  /* Deeper Emerald */
+  --client-light: #10b981;
+  /* Saturated Green */
+  --client-accent: #34d399;
+  /* Vibrant Spring Green */
+  --bridge-glow: #fbbf24;
+  --text-on-dark: #f0f9ff;
+  --text-on-light: #0f172a;
+
+  /* 3D & Effects */
+  --perspective: 1200px;
+  --shadow-3d: 20px 20px 60px rgba(0, 0, 0, 0.3), -20px -20px 60px rgba(255, 255, 255, 0.05);
+  --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --transition-speed: 0.3s;
+}
+
+[data-theme='dark'] {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-primary: #38bdf8;
+  --accent-secondary: #10b981;
+  --nav-bg: rgba(2, 6, 23, 0.8);
+  --card-bg: rgba(15, 23, 42, 0.7);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --btn-text: #0f172a;
+
+  /* Status colors dark */
+  --danger: #f87171;
+  --success: #34d399;
+  --purple: #a78bfa;
+  --warning: #facc15;
+
+  /* Dashboard Dark Theme */
+  --dash-pharma-bg: #0f172a;
+  --dash-pharma-sidebar: #1e293b;
+  --dash-client-bg: #0f172a;
+  --dash-client-sidebar: #1e293b;
+
+  --dash-text: #f8fafc;
+  --dash-text-muted: rgba(255, 255, 255, 0.6);
+  --dash-border: rgba(255, 255, 255, 0.1);
+  --dash-card: rgba(30, 41, 59, 0.8);
+  --dash-card-hover: rgba(30, 41, 59, 1);
+
+  /* Brand colors for dark mode */
+  --pharmacy-blue: #0f172a;
+  --client-mint: #064e3b;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  /* More modern/tech feel */
+  /* overflow: hidden; Removed to allow scrolling */
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.isometric-container {
+  perspective: var(--perspective);
+  transform-style: preserve-3d;
+}
+/* Dashboard Light Mode - Force overrides */
+:root:not([data-theme='dark']) .nav-item {
+  color: #64748b !important;
+}
+
+:root:not([data-theme='dark']) .section-container {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) .stat-card {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) .dashboard-sidebar {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .dashboard-container {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .stat-value,
+:root:not([data-theme='dark']) .stat-label {
+  color: inherit;
+}
+
+:root:not([data-theme='dark']) table th {
+  color: #64748b !important;
+  background: #f8fafc;
+}
+
+:root:not([data-theme='dark']) table td {
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .section-header h2 {
+  color: #0f172a !important;
+}
+
+/* ULTIMATE Light Mode Override - these MUST win */
+:root:not([data-theme='dark']) .nav-item {
+  color: #64748b !important;
+}
+
+:root:not([data-theme='dark']) .nav-item:hover {
+  background-color: #ffffff !important;
+  color: #38bdf8 !important;
+}
+
+:root:not([data-theme='dark']) .section-container {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) .stat-card {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) .dashboard-sidebar {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .dashboard-container {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .sidebar-brand {
+  color: #34d399 !important;
+}
+
+:root:not([data-theme='dark']) table th {
+  color: #64748b !important;
+  background: #f8fafc !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) table td {
+  color: #0f172a !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+:root:not([data-theme='dark']) .section-header h2 {
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .stat-value {
+  color: #0f172a !important;
+}
+
+:root:not([data-theme='dark']) .stat-label {
+  color: #64748b !important;
+}

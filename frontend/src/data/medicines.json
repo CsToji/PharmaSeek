@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Amoxicillin 500mg",
+        "category": "Antibiotic"
+    },
+    {
+        "id": 2,
+        "name": "Paracetamol 500mg",
+        "category": "Analgesic"
+    },
+    {
+        "id": 3,
+        "name": "Ibuprofen 400mg",
+        "category": "Anti-inflammatory"
+    },
+    {
+        "id": 4,
+        "name": "Lisinopril 10mg",
+        "category": "Hypertension"
+    },
+    {
+        "id": 5,
+        "name": "Cetirizine 10mg",
+        "category": "Antihistamine"
+    },
+    {
+        "id": 6,
+        "name": "Metformin 500mg",
+        "category": "Diabetes"
+    },
+    {
+        "id": 7,
+        "name": "Atorvastatin 20mg",
+        "category": "Cholesterol"
+    },
+    {
+        "id": 8,
+        "name": "Omeprazole 20mg",
+        "category": "Gastric"
+    }
+]

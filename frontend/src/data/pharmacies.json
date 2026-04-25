@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "name": "City Pharma",
+        "address": "123 Main St, Paris",
+        "stock": [
+            "Amoxicillin 500mg",
+            "Paracetamol 500mg"
+        ],
+        "distance": "0.5 km",
+        "location": {
+            "lat": 48.8566,
+            "lng": 2.3522
+        }
+    },
+    {
+        "id": 2,
+        "name": "Green Cross",
+        "address": "45 Blvd Saint-Germain, Paris",
+        "stock": [
+            "Ibuprofen 400mg",
+            "Lisinopril 10mg"
+        ],
+        "distance": "1.2 km",
+        "location": {
+            "lat": 48.8534,
+            "lng": 2.3488
+        }
+    },
+    {
+        "id": 3,
+        "name": "HealthFirst",
+        "address": "78 Rue de Rivoli, Paris",
+        "stock": [
+            "Amoxicillin 500mg",
+            "Lisinopril 10mg"
+        ],
+        "distance": "2.1 km",
+        "location": {
+            "lat": 48.8606,
+            "lng": 2.3376
+        }
+    }
+]

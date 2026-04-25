@@ -1,0 +1,10 @@
+.vscode
+demo/.gitignore
+demo/target/
+*.jar
+*.class
+*.jpeg
+*.jpg
+*.log
+.idea/
+*.iml
