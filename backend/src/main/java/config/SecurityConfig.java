@@ -104,7 +104,7 @@ public class SecurityConfig {
         if (frontendUrl == null || frontendUrl.isEmpty()) {
             frontendUrl = "http://localhost:5173";
         }
-        configuration.setAllowedOrigins(List.of(frontendUrl, "https://*.vercel.app"));
+        configuration.setAllowedOrigins(List.of(frontendUrl, "https://*.vercel.app", "https://pharma-seek.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
