@@ -4,9 +4,9 @@ spring:
   application:
     name: pharmacy-app
   datasource:
-    url: jdbc:${DATABASE_URL:postgresql://localhost:5432/pharmacy_db}
-    username: ${DATABASE_USERNAME:postgres}
-    password: ${DATABASE_PASSWORD:postgres}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     show-sql: false
     properties:
