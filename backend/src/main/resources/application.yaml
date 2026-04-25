@@ -1,14 +1,14 @@
 server:
-  port: 8088
+  port: ${PORT:8080}
 spring:
   application:
     name: pharmacy-app
   datasource:
-    url: jdbc:mysql://localhost:3306/pharmacy-app?createDatabaseIfNotExist=true
-    username: root
-    password: Adem147852369..
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/pharmacy-app?createDatabaseIfNotExist=true}
+    username: ${DATABASE_USERNAME:root}
+    password: ${DATABASE_PASSWORD:Adem147852369..}
   jpa:
-    show-sql: true
+    show-sql: false
   jackson:
     time-zone: GMT+1
     date-format: yyyy-MM-dd HH:mm:ss
@@ -27,3 +27,5 @@ spring:
     refreshTokenValidity: 604800000
     secureCookie: false
     sameSite: Lax
+cors:
+  frontend-url: ${FRONTEND_URL:http://localhost:5173}
