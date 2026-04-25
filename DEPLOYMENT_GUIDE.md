@@ -3,7 +3,7 @@
 This guide deploys the full-stack app completely free using:
 - **Frontend**: Vercel (React)
 - **Backend**: Render (Spring Boot)
-- **Database**: MySQL on Render
+- **Database**: PostgreSQL on Render (MySQL is no longer available on Render)
 
 ---
 
@@ -15,7 +15,7 @@ This guide deploys the full-stack app completely free using:
 
 ---
 
-## Step 1: Push Code to GitHub
+## Step 1: Push Code to GitHub ✅ (Already Done)
 
 ```bash
 # Navigate to project directory

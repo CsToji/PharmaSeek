@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-mysql</artifactId>
+            <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
         <dependency>
@@ -46,8 +46,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -134,9 +134,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>11.17.0</version>
                 <configuration>
-                    <url>jdbc:mysql://localhost:3306/pharmacy-app?createDatabaseIfNotExist=true</url>
-                    <user>root</user>
-                    <password>root</password>
+                    <url>jdbc:postgresql://localhost:5432/pharmacy_db</url>
+                    <user>postgres</user>
+                    <password>postgres</password>
                 </configuration>
             </plugin>
             <plugin>

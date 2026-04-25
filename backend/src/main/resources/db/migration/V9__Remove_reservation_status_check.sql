@@ -1,2 +1,0 @@
-ALTER TABLE reservation MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'PENDING';
-ALTER TABLE reservation DROP CHECK chk_res_status;
